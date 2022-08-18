@@ -1,0 +1,101 @@
+import "utils/pack/bool/unpack";
+import "utils/pack/bool/pack";
+import "utils/casts/u32_to_field";
+from "EMBED" import u32_to_bits;
+from "EMBED" import u32_from_bits;
+import "hashes/sha256/512bitPacked.code" as sha256packed;
+
+const u32 EMPTY = 0;
+const u32 RED = 1;
+const u32 BLACK = 2;
+
+const u32 SIZE = 32;
+const u32 BOARD_LENGTH = 4;
+const u32 NUM_STEPS = 2;
+
+def field_to_board(u32 status) -> u32[BOARD_LENGTH][BOARD_LENGTH] {
+    bool[SIZE] bits = u32_to_bits(status);
+    u32[BOARD_LENGTH][BOARD_LENGTH] mut board = [[0;BOARD_LENGTH];BOARD_LENGTH];
+    for u32 i in 0..BOARD_LENGTH {
+        for u32 j in 0..BOARD_LENGTH {
+            u32 pos = (i*BOARD_LENGTH+j) * 2;
+            u32 val = (bits[pos]?2:0)+(bits[pos+1]?1:0);
+            assert(val != 3);
+            board[i][j] = val;
+            //log("i {}, j {}, val {}", i, j, val);
+        }
+    }
+    return board;
+}
+
+def board_to_field(u32[BOARD_LENGTH][BOARD_LENGTH] board) -> u32 {
+    bool[SIZE] mut bits = [false;SIZE];
+    for u32 i in 0..BOARD_LENGTH {
+        for u32 j in 0..BOARD_LENGTH {
+            u32 pos = (i*BOARD_LENGTH+j) * 2;
+            u32 val = board[i][j];
+            log("i {}, j {}, val {}", i, j, val);
+            assert(val < 3);
+            bool[32] val_bits = u32_to_bits(val);
+            bits[pos] = val_bits[30];
+            bits[pos+1] = val_bits[31];
+            log("** {} {}", val_bits[30], val_bits[31]);
+        }
+    }
+    log("{}", bits);
+    return u32_from_bits(bits);
+}
+
+def update_board(u32[2] coord, u32[BOARD_LENGTH][BOARD_LENGTH] mut board) -> u32[BOARD_LENGTH][BOARD_LENGTH] {
+    u32 color = board[coord[0]][coord[1]];
+
+    u32 mut left = 10;
+    u32 mut right = 0;
+    u32 mut up = 10;
+    u32 mut down = 0;
+    u32 mut upLeft = 0;
+    u32 mut upRight = 0;
+    u32 mut downLeft = 0;
+    u32 mut downRight = 0;
+
+    for u32 i in 0..BOARD_LENGTH {
+        board[i][coord[1]] = down != 0 && i > coord[0] && i < down ? color: board[i][coord[1]];
+        down = down == 0 && board[i][coord[1]] == color && i > coord[0]?i:down;
+        board[i][coord[1]] = up != 10 && up > 0 && i > up && i < coord[0] ? color: board[i][coord[1]];
+        up = up == 10 && board[i][coord[1]] == color && i < coord[0] ? i:up;
+        board[coord[0]][i] = right != 0 && i > coord[1] && i < right ? color: board[coord[0]][i];
+        right = right == 0 && board[coord[0]][i] == color && i > coord[1]? i:right;
+        board[coord[0]][i] = left !=0 && i > left && i < coord[1] ? color: board[coord[0]][i];
+        left = board[coord[0]][i] == 10 && i < coord[1] && left == 0? i: left;
+        for u32 j in 0..BOARD_LENGTH {
+            board[i][j] = (i-j) == (coord[0] - coord[1]) && i < coord[0] && j < coord[1] && upLeft > 0? color: board[i][j];
+            upLeft = upLeft + ((i-j) == (coord[0] - coord[1]) && i < coord[0] && j < coord[1] && upLeft == 0 ? 1:0);
+            board[i][j] = (i-j) == (coord[0] - coord[1]) && i > coord[0] && j > coord[1] && downRight > 0? color: board[i][j];
+            downRight = downRight + (i-j) == (coord[0] - coord[1]) && i > coord[0] && j > coord[1] && 0 == downRight ? 1: 0;
+            board[i][j] = (j-i) == (coord[0] - coord[1]) && i < coord[0] && j > coord[1] && upRight != 0? color: board[i][j];
+            upRight = upRight + (j-i) == (coord[0] - coord[1]) && i < coord[0] && j > coord[1] && upRight == 0? 1: 0;
+            board[i][j] = (j-i) == (coord[0] - coord[1]) && i > coord[0] && j < coord[1] && downLeft != 0? color: board[i][j];
+            downLeft = downLeft + (j-i) == (coord[0] - coord[1]) && i > coord[0] && j < coord[1] && downLeft == 0? 1:0;
+        }
+    }
+    return board;
+}
+
+def execute_moves(private u32[NUM_STEPS][2] moves, private u32[BOARD_LENGTH][BOARD_LENGTH] mut board) -> u32 {
+    for u32 i in 0..NUM_STEPS {
+        u32[2] coord = moves[i];
+        log("coord0 {}, coord1 {}, val {}", coord[0], coord[1], board[coord[0]][coord[1]]);
+        assert(board[coord[0]][coord[1]] == 0);
+        board[coord[0]][coord[1]] = (i%2 == 0) ? BLACK:RED;
+        board = update_board(coord, board);
+    }
+    return board_to_field(board);
+}
+
+def main(private u32[NUM_STEPS][2] moves, private u32 status, u32 pubStatus) -> u32 {
+    log("status {}", status);
+    u32[BOARD_LENGTH][BOARD_LENGTH] mut board = field_to_board(status);
+    u32 updatedStatus = execute_moves(moves, board);
+    assert(updatedStatus == pubStatus);
+    return updatedStatus;
+}
