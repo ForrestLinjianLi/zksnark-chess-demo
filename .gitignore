@@ -8,3 +8,5 @@
 /code/verification.key
 /code/verifier.sol
 /code/witness
+/.idea
+/__pycache__
