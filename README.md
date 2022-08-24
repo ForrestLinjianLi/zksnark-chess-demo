@@ -1,4 +1,4 @@
-# Untitled
+# zksnark-:wqchess-demo
 
 A zksnark application demo that imitates Reversi chess. 
 
@@ -6,7 +6,7 @@ A zksnark application demo that imitates Reversi chess.
 
 # Introduction
 
-This demo is dedicated to hiding the moves so that the board status can be verified without revealing any more information. For example, Alice and Bob are playing Reversi, and Cindy is the referee. There’s a third person called David, and she only knows the current board status. However, David has no idea how Alice and Bob made their moves. Therefore, she wants to verify if the board status she knows is valid or not. With a known board status, David can consult Cindy to verify the board status. This program is playing Cindy’s role to hide Alice and Bob’s moves, and providing proof to David.
+Imagine Alice and Bob are playing Reversi, and Cindy is the referee. This program is playing Cindy's role to hiding the moves so that the board status can be verified without revealing any more information. There’s a third person called David, and he only knows the current board status. However, David has no idea how Alice and Bob made their moves. Therefore, he wants to verify if the board status he knows is valid or not. With a known board status, David can consult Cindy to verify the board status. Remark that in the following sections, these names will repeatly appears. 
 
 # Pre-settings
 
@@ -34,7 +34,7 @@ make sure you have all the installation set up before diving into this demo.
         
 4. Postman
     
-    Install Postman for testing purposes. [https://www.postman.com/](https://www.postman.com/)
+    Install Postman for making http requests. [https://www.postman.com/](https://www.postman.com/)
     
 
 # Run the Demo
