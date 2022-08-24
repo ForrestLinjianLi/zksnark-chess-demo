@@ -13,7 +13,7 @@ const u32 SIZE = 32;
 const u32 BOARD_LENGTH = 4;
 const u32 NUM_STEPS = 2;
 
-def field_to_board(u32 status) -> u32[BOARD_LENGTH][BOARD_LENGTH] {
+def u32_to_board(u32 status) -> u32[BOARD_LENGTH][BOARD_LENGTH] {
     bool[SIZE] bits = u32_to_bits(status);
     u32[BOARD_LENGTH][BOARD_LENGTH] mut board = [[0;BOARD_LENGTH];BOARD_LENGTH];
     for u32 i in 0..BOARD_LENGTH {
@@ -27,7 +27,8 @@ def field_to_board(u32 status) -> u32[BOARD_LENGTH][BOARD_LENGTH] {
     return board;
 }
 
-def board_to_field(u32[BOARD_LENGTH][BOARD_LENGTH] board) -> u32 {
+// converts board status to u32
+def board_to_u32(u32[BOARD_LENGTH][BOARD_LENGTH] board) -> u32 {
     bool[SIZE] mut bits = [false;SIZE];
 
     for u32 i in 0..BOARD_LENGTH {
@@ -48,7 +49,6 @@ def board_to_field(u32[BOARD_LENGTH][BOARD_LENGTH] board) -> u32 {
 // Update the board status after execute moves.
 def update_board(u32[2] coord, u32[BOARD_LENGTH][BOARD_LENGTH] mut board) -> u32[BOARD_LENGTH][BOARD_LENGTH] {
     u32 color = board[coord[0]][coord[1]];
-
     bool mut left = false;
     bool mut right = false;
     bool mut up = false;
@@ -116,14 +116,14 @@ def execute_moves(private u32[NUM_STEPS][2] moves, private u32[BOARD_LENGTH][BOA
         board = update_board(coord, board);
         log("after, {}", board);
     }
-    return board_to_field(board);
+    return board_to_u32(board);
 }
 
-def main(private u32[NUM_STEPS][2] moves, private u32 status, u32 pubStatus) -> u32 {
-    log("base status {}", status);
+def main(private u32[NUM_STEPS][2] moves, private u32 baseStatus, u32 pubStatus) -> u32 {
+    log("base status {}", baseStatus);
     log("pub status {}", pubStatus);
 
-    u32[BOARD_LENGTH][BOARD_LENGTH] mut board = field_to_board(status);
+    u32[BOARD_LENGTH][BOARD_LENGTH] mut board = u32_to_board(baseStatus);
     u32 updatedStatus = execute_moves(moves, board);
     assert(updatedStatus == pubStatus);
     return updatedStatus;
