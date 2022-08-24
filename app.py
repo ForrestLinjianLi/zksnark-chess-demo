@@ -12,11 +12,11 @@ import docker
 
 client = docker.from_env()
 
-transaction_from_addr = "0x8C564502972Cf16f94445d180FC1d968129Fd01c"
+transaction_from_addr = "0x41d786A644B414237Cc365442B07B9B44df3166E"
 cfg = {
     "network": "http://127.0.0.1:7545",
-    "contract_addr": "0x22a65143bE08821021Bb5BdF9cB0902A88eAA401",
-    "app_location": "/Users/lilinjian/PycharmProjects/zksnark-app-demo"
+    "contract_addr": "0x3d88c2D1b5dAb55Fb6dFa0eFf1E103c9A901391e",
+    "app_location": "/Users/lilinjian/PycharmProjects/zksnark-chess-demo"
 }
 
 container = client.containers.run(
@@ -63,25 +63,13 @@ def compute_witness_docker(numerical_input, base, status):
     subprocess.call(
         "docker exec -t " +
         cfg["docker_cont_name"] +
-        " bash -c 'cd /home/zokrates/ZoKrates/target/debug/code/preimage/ && \
+        " bash -c 'cd /home/zokrates/ZoKrates/target/debug/code && \
         zokrates compute-witness -a " + numerical_input + " " + str(base) + " " + str(status) + "'", shell=True)
 
     with open(cfg["app_location"] +
-              '/code/preimage/witness', 'r') as myfile:
+              '/code/witness', 'r') as myfile:
         data = myfile.read().replace('\n', '')
 
-    return data
-
-
-def compute_get_hashes_witness_docker(numerical_input):
-    subprocess.call(
-        "/usr/local/bin/docker exec -t " +
-        cfg["docker_cont_name"] +
-        " bash -c 'cd /home/zokrates/ZoKrates/target/debug/code/get_hashes && \
-        zokrates compute-witness -a 0 0 0 " + numerical_input + "'", shell=True)
-    with open(cfg["app_location"] +
-              '/code/get_hashes/witness', 'r') as myfile:
-        data = myfile.read().replace('\n', '')
     return data
 
 
@@ -89,9 +77,9 @@ def generate_proof_docker():
     subprocess.call(
         "/usr/local/bin/docker  exec -t " +
         cfg["docker_cont_name"] +
-        " bash -c 'cd /home/zokrates/ZoKrates/target/debug/code/preimage/ && \
+        " bash -c 'cd /home/zokrates/ZoKrates/target/debug/code && \
         zokrates generate-proof'", shell=True)
-    with open(cfg["app_location"]+'/code/preimage/proof.json') as f:
+    with open(cfg["app_location"]+'/code/proof.json') as f:
         data = json.load(f)
     return data
 
@@ -111,7 +99,7 @@ def verify_proof_eth(proof):
     print(json.dumps(inp, indent=4))
     try:
         a, b, c, inputs = flatten_proof(proof)
-        response = contract.functions.verifyTx([a, b, c],inputs).call()
+        response = contract.functions.verifyTx([a, b, c], inputs).call()
         print(response)
     except ValueError as e:
         print(e)
@@ -121,7 +109,7 @@ def verify_proof_eth(proof):
 
 def transact_proof_eth(proof):
     a, b, c, inputs = flatten_proof(proof)
-    response = contract.functions.verifyTx([a, b, c],inputs).transact({
+    response = contract.functions.verifyTx([a, b, c], inputs).transact({
         'from': transaction_from_addr,
         'gas': (200*100*100)})
     return response.hex()
@@ -134,13 +122,11 @@ def create_witness_and_make_proof(input):
     print("created proof")
     return proof
 
+
 def start_docker():
     subprocess.call(
         "docker run -v $PWD/code:/home/zokrates/ZoKrates/target/debug/code \
         -ti zokrates_tutorial \/bin/bash", shell=True)
-
-
-def hash_to_128(d): return [int(str(d)[0:34], 16), int(str(d)[34:], 16)]
 
 
 app = Flask(__name__)
@@ -173,16 +159,12 @@ def deploy():
 @app.route("/proveit", methods=["POST"])
 def proveit():
     payload = json.loads(request.data)
-    # h0, h1 = hash_to_128(payload["digest"])
-    board_status = payload["digest"]
-    # final_digest = hex(int(h0)) + hex(int(h1))[2:]
-    # print(final_digest, h0, h1, payload["preimage"])
     compute_witness_docker(" ".join([str(i) for i in payload["moves"]]), payload["base"], payload["digest"])
     proof = generate_proof_docker()
     return json.dumps(proof)
 
 
-@app.route("/witness", methods=["POST"])
+@app.route("/digest", methods=["POST"])
 def witness():
     binary = "".join(["".join(['{:02b}'.format(i) for i in line]) for line in json.loads(request.data)["input"]])
     r = {
@@ -192,7 +174,7 @@ def witness():
 
 
 if __name__ == "__main__":
-    start_docker()
+    # start_docker()
     app.run()
     print('\n\n\nPRESS CTRL-C AGAIN TO KILL DOCKER CONTAINER!')
     signal.signal(signal.SIGINT, handler)

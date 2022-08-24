@@ -1,0 +1,10 @@
+/build/
+/code/abi.json
+/code/out
+/code/out.r1cs
+/code/out.wtns
+/code/proof.json
+/code/proving.key
+/code/verification.key
+/code/verifier.sol
+/code/witness
