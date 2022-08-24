@@ -84,15 +84,6 @@ def generate_proof_docker():
     return data
 
 
-def witness_to_dict(data):
-    nums = {}
-    for z in data[0:90].split("~out_"):
-        if z != "":
-            y = z.split(" ")
-            nums["h"+str(y[0])] = y[1]
-    return nums
-
-
 def verify_proof_eth(proof):
     inp = flatten_proof(proof)
     print(" ")
@@ -113,20 +104,6 @@ def transact_proof_eth(proof):
         'from': transaction_from_addr,
         'gas': (200*100*100)})
     return response.hex()
-
-
-def create_witness_and_make_proof(input):
-    witness_ref = compute_witness_docker(input)
-    print("created witness")
-    proof = generate_proof_docker()
-    print("created proof")
-    return proof
-
-
-def start_docker():
-    subprocess.call(
-        "docker run -v $PWD/code:/home/zokrates/ZoKrates/target/debug/code \
-        -ti zokrates_tutorial \/bin/bash", shell=True)
 
 
 app = Flask(__name__)
@@ -174,7 +151,6 @@ def witness():
 
 
 if __name__ == "__main__":
-    # start_docker()
     app.run()
     print('\n\n\nPRESS CTRL-C AGAIN TO KILL DOCKER CONTAINER!')
     signal.signal(signal.SIGINT, handler)
