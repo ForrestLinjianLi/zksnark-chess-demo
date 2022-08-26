@@ -10,7 +10,7 @@ This project is under supervision of **Dr. Zehua Wang** at University of British
 Imagine Alice and Bob are playing Reversi, and Cindy is the referee. This program is playing Cindy's role to hiding the moves so that the board status can be verified without revealing any more information. There’s a third person called David, and he only knows the current board status. However, David has no idea how Alice and Bob made their moves. Therefore, he wants to verify if the board status he knows is valid or not. With a known board status, David can consult Cindy to verify the board status. Remark that in the following sections, these names will repeatly appears. 
 
 ## Overview
-![](images/API call graph.png)
+![Overview of the API calls](images/API_call_graph.png)
 ## Pre-settings
 
 Make sure you have all the installation set up before diving into this demo.
