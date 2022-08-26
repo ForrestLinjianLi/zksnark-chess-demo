@@ -200,19 +200,4 @@ contract Verifier {
             return false;
         }
     }
-
-    function verifyTx2(
-            Proof memory proof, uint[2] memory input
-        ) public view returns (bool r) {
-        uint[] memory inputValues = new uint[](2);
-
-        for(uint i = 0; i < input.length; i++){
-            inputValues[i] = input[i];
-        }
-        if (verify(inputValues, proof) == 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
