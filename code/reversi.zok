@@ -67,7 +67,7 @@ def update_board(u32[2] coord, u32[BOARD_LENGTH][BOARD_LENGTH] mut board) -> u32
 
         // search down direction
         board[x][coord[1]] = down && x > coord[0] ? color: board[x][coord[1]];
-        down = !down && board[i][coord[1]] == color && x > coord[0]? true: down;
+        down = !down && board[x][coord[1]] == color && x > coord[0]? true: down;
 
         // search up direction
         board[i][coord[1]] = up && i < coord[0] ? color: board[i][coord[1]];
@@ -75,7 +75,7 @@ def update_board(u32[2] coord, u32[BOARD_LENGTH][BOARD_LENGTH] mut board) -> u32
 
         // search right direction
         board[coord[0]][x] = right && x > coord[1] ? color: board[coord[0]][x];
-        right = !right && board[coord[0]][i] == color && x > coord[1]? true:right;
+        right = !right && board[coord[0]][x] == color && x > coord[1]? true:right;
 
         // search left direction
         board[coord[0]][i] = left && i < coord[1] ? color: board[coord[0]][i];
