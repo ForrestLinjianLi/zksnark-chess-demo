@@ -13,12 +13,13 @@ Imagine Alice and Bob are playing Reversi, and Cindy is the referee. This progra
 
 <p align="center">
     <img src="./images/API_call_graph.png">
-    <em>image_caption</em>
+    <em>API call graph</em>
 </p>
 
-*asdasda*
-
-![](images/zokrates_command.png)
+<p align="center">
+    <img src="./images/zokrates_command.png">
+    <em>The flow of the ZoKrates commands behind the API calls</em>
+</p>
 ## Pre-settings
 
 Make sure you have all the installation set up before diving into this demo.
@@ -88,21 +89,26 @@ Make sure you have all the installation set up before diving into this demo.
     
     Therefore we can check the deployed smart contract, and transactions. 
     
-    ![截屏2022-08-17 下午10.19.17.png](images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_%25E4%25B8%258B%25E5%258D%258810.19.17.png)
+<p align="center">
+    <img width="70%" height="70%" src="./images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_%25E4%25B8%258B%25E5%258D%258810.19.17.png">
+</p>
     
     Add project and select `truffle-config.js` in the project.
     
-    ![截屏2022-08-17 下午10.20.49.png](images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_%25E4%25B8%258B%25E5%258D%258810.20.49.png)
-    
-    ![截屏2022-08-17 下午10.25.59.png](images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_%25E4%25B8%258B%25E5%258D%258810.25.59.png)
-    
+<p align="center">
+    <img width="70%" height="70%" src="./images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_%25E4%25B8%258B%25E5%258D%258810.20.49.png">
+    <img width="70%" height="70%" src="./images/%25E6%2588%25AA%25E5%25B1%258F2022-08-17_%25E4%25B8%258B%25E5%258D%258810.25.59.png">
+</p>
+     
 4. **Deploy the smart contracts**
     
     ```bash
     truffle compile && truffle migrate
     ```
     
-    ![截屏2022-08-22 下午3.23.00.png](images/%25E6%2588%25AA%25E5%25B1%258F2022-08-22_%25E4%25B8%258B%25E5%258D%25883.23.00.png)
+<p align="center">
+    <img width="70%" height="70%" src="./images/%25E6%2588%25AA%25E5%25B1%258F2022-08-22_%25E4%25B8%258B%25E5%258D%25883.23.00.png">
+</p>
     
     The Verifier smart contract is now deployed at  `0x30b385DDf61B809C33c96D3994285De5C6AD5BBA`.  
     
@@ -127,7 +133,9 @@ Make sure you have all the installation set up before diving into this demo.
     python3 app.py
     ```
     
-    ![截屏2022-08-22 下午3.34.16.png](images/%25E6%2588%25AA%25E5%25B1%258F2022-08-22_%25E4%25B8%258B%25E5%258D%25883.34.16.png)
+<p align="center">
+    <img width="70%" height="70%" src="./images/%25E6%2588%25AA%25E5%25B1%258F2022-08-22_%25E4%25B8%258B%25E5%258D%25883.34.16.png">
+</p>
     
 
 ### Run demo
@@ -156,8 +164,9 @@ Make sure you have all the installation set up before diving into this demo.
     
     However, David does not know what moves Alice and Bob had made. She only knows the updated board status. In order to call verifies to generate a proof, David needs to create a digest to send to Cindy. It basically converts the board status into a 32-bit integer. 
     
-
-![截屏2022-08-23 下午1.35.28.png](images/%25E6%2588%25AA%25E5%25B1%258F2022-08-23_%25E4%25B8%258B%25E5%258D%25881.35.28.png)
+<p align="center">
+    <img width="70%" height="70%" src="./images/%25E6%2588%25AA%25E5%25B1%258F2022-08-23_%25E4%25B8%258B%25E5%258D%25881.35.28.png">
+</p>
 
 1. **Generate proof**
     
@@ -223,7 +232,9 @@ Make sure you have all the installation set up before diving into this demo.
     }
     ```
     
-    ![截屏2022-08-23 下午7.18.04.png](images/%25E6%2588%25AA%25E5%25B1%258F2022-08-23_%25E4%25B8%258B%25E5%258D%25887.18.04.png)
+<p align="center">
+    <img width="70%" height="70%" src="./images/%25E6%2588%25AA%25E5%25B1%258F2022-08-23_%25E4%25B8%258B%25E5%258D%25887.18.04.png">
+</p>
     
     Now the proving process has finished.
     
