@@ -18,8 +18,10 @@ Imagine Alice and Bob are playing Reversi, and Cindy is the referee. This progra
 
 <p align="center">
     <img src="./images/zokrates_command.png">
-    <em>The flow of the ZoKrates commands behind the API calls</em>
+<br>    
+<em> The ZoKrates commands and the generated files behind the API call flow. </em>
 </p>
+
 ## Pre-settings
 
 Make sure you have all the installation set up before diving into this demo.
