@@ -13,13 +13,16 @@ Imagine Alice and Bob are playing Reversi, and Cindy is the referee. This progra
 
 <p align="center">
     <img src="./images/API_call_graph.png">
-    <em>API call graph</em>
+<br>    
+<em>API call graph</em>
 </p>
+
+<hr/>
 
 <p align="center">
     <img src="./images/zokrates_command.png">
-<br>    
-<em> The ZoKrates commands and the generated files behind the API call flow. </em>
+   <br>    
+   <em> The ZoKrates commands and the generated files behind the API call flow. </em>
 </p>
 
 ## Pre-settings
